@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ottimizzatore de Rustèlle | Econometria Abruzzese</title>
+  <meta name="description" content="Ottimizza la cottura de le rustèlle co' la teoria dell'utilità microeconomica. Trova la temperatura, il tempo e le girate perfette pe' la perfezione gastronomica." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='laboratorio.css') }}" />
+</head>
+<body>
+
+  <div class="bg-particles" id="particles"></div>
+
+  <!-- ── Intestazione ───────────────────────────────────── -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="logo-group">
+        <span class="logo-icon">🔥</span>
+        <div>
+          <h1 class="logo-title">Ottimizzatore de Rustèlle</h1>
+          <p class="logo-sub">Motore de Utilità Microeconomiche v2.0 — Abruzzo Edition</p>
+        </div>
+      </div>
+      <div class="header-badge">
+        <span class="badge-dot"></span>
+        <span>Analisi in Diretta</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Guscio principale ──────────────────────────────── -->
+  <div id="app-shell">
+
+    <!-- SINISTRA: Controlli -->
+    <aside class="control-panel glass-card">
+
+      <div class="panel-header">
+        <h2>⚙️ Parametri</h2>
+        <p class="panel-sub">Aggiustece le variabili de cotture</p>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="arrosticini-type">
+          <span class="label-icon">🥩</span> Tipo de Rustèlle
+          <span class="label-badge" id="badge-M">M = 100</span>
+        </label>
+        <div class="select-wrapper">
+          <select id="arrosticini-type" class="styled-select">
+            <option value="Classic">Classiche — pecora pura (M = 100)</option>
+            <option value="Medium">Medie — miste co' tutto (M = 120)</option>
+            <option value="Artisanal">Artigianali — scelte a mano (M = 150)</option>
+          </select>
+          <span class="select-arrow">▾</span>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="salting-timing">
+          <span class="label-icon">🧂</span> Quanne se sale?
+          <span class="label-badge" id="badge-S">S = 1.0</span>
+        </label>
+        <div class="select-wrapper">
+          <select id="salting-timing" class="styled-select">
+            <option value="Before Cooking">Prima de còce — comme Dio cummanne (S = 1.0)</option>
+            <option value="During Cooking">Mentre còce — già stai sbaglianno (S = 0.8)</option>
+            <option value="After Cooking">Doppo ch'ha còtte — mannaggia a te (S = 0.4)</option>
+          </select>
+          <span class="select-arrow">▾</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="control-group">
+        <label class="control-label" for="temperature">
+          <span class="label-icon">🌡️</span> Calore de la Brace
+          <span class="label-value" id="val-T">200°C</span>
+        </label>
+        <div class="slider-track-wrapper">
+          <input type="range" id="temperature" class="styled-slider" min="100" max="300" step="1" value="200" />
+          <div class="slider-markers"><span>100°C fredda</span><span>200°C perfetta</span><span>300°C inferno</span></div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="grill-time">
+          <span class="label-icon">⏱️</span> Tempe su la Furnacèlle
+          <span class="label-value" id="val-t">8 min</span>
+        </label>
+        <div class="slider-track-wrapper">
+          <input type="range" id="grill-time" class="styled-slider" min="1" max="20" step="0.5" value="8" />
+          <div class="slider-markers"><span>1 min cruda</span><span>10 min</span><span>20 min carbone</span></div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="num-turns">
+          <span class="label-icon">🔄</span> Quante Vote le Giri
+          <span class="label-value" id="val-N">1</span>
+        </label>
+        <div class="slider-track-wrapper">
+          <input type="range" id="num-turns" class="styled-slider" min="1" max="10" step="1" value="1" />
+          <div class="slider-markers"><span>1 — basta</span><span>5</span><span>10 — nun stà esagerà</span></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="formula-box">
+        <p class="formula-title">📐 La Formule Attive</p>
+        <code class="formula-code" id="formula-display">
+          U = 1.0 × max(0, 100 − 0.1(200−200)² − 2(8−8)² − 15(1−1)²)
+        </code>
+      </div>
+
+      <button class="share-btn" id="share-btn" onclick="shareResult()">
+        <span>📤</span> Manne a li Cumpagne
+      </button>
+      <div id="share-toast" class="share-toast hidden">✅ Link copiato! Mo' lo sai tu chi è bravo.</div>
+
+    </aside>
+
+    <!-- DESTRA: Risultati -->
+    <section class="results-panel">
+
+      <!-- Punteggio -->
+      <div class="utility-score-card glass-card">
+        <div class="score-left">
+          <p class="score-label">Puntegge de Utilità — U(T, t, N, S, M)</p>
+          <div class="score-value-wrapper">
+            <span class="score-value" id="utility-score">100.00</span>
+            <span class="score-unit">rustell-utils</span>
+          </div>
+          <div class="score-bar-wrapper">
+            <div class="score-bar-track">
+              <div class="score-bar-fill" id="score-bar"></div>
+            </div>
+            <span class="score-bar-label" id="score-tier-label">⭐ Zona Ottimale</span>
+          </div>
+        </div>
+        <div class="score-right">
+          <div class="param-pill" id="pill-T">T=200°C</div>
+          <div class="param-pill" id="pill-t">t=8min</div>
+          <div class="param-pill" id="pill-N">N=1</div>
+          <div class="param-pill" id="pill-M">M=100</div>
+          <div class="param-pill" id="pill-S">S=1.0</div>
+        </div>
+      </div>
+
+      <!-- Grafici -->
+      <div class="charts-grid">
+        <div class="chart-card glass-card">
+          <div class="chart-header">
+            <h3>🌡️ Curva de Calore</h3>
+            <span class="chart-sub">U vs T — t e N fissi</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-T"></canvas>
+          </div>
+        </div>
+        <div class="chart-card glass-card">
+          <div class="chart-header">
+            <h3>⏱️ Curva de Tempe</h3>
+            <span class="chart-sub">U vs t — T e N fissi</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-t"></canvas>
+          </div>
+        </div>
+        <div class="chart-card glass-card">
+          <div class="chart-header">
+            <h3>🔄 Curva de Girate</h3>
+            <span class="chart-sub">U vs N — T e t fissi</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-N"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Risultato Visivo -->
+      <div class="visual-result glass-card" id="visual-result">
+        <h3 class="visual-title">🍖 Come so' uscite?</h3>
+        <div class="visual-content" id="visual-content"></div>
+        <p class="visual-description" id="visual-description"></p>
+      </div>
+
+    </section>
+  </div>
+
+  <script src="{{ url_for('static', filename='laboratorio.js') }}"></script>
+</body>
+</html>
+
